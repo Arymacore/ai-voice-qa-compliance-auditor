@@ -1,0 +1,15 @@
+file,R1,R2,R3,R4,P1,P2,status
+call_001_compliant.txt,1,1,1,1,1,1,PASS
+call_002_noncompliant.txt,0,0,0,0,0,0,FAIL
+call_003_compliant_variant.txt,1,1,1,1,1,1,PASS
+call_004_missing_dispute.txt,1,1,0,1,1,1,FAIL
+call_005_missing_recording_and_name.txt,0,1,1,0,1,1,FAIL
+call_006_explicit_threat.txt,1,1,1,1,0,1,FAIL
+call_007_implied_threat.txt,1,1,1,1,0,0,FAIL
+call_008_hostile_customer.txt,1,1,1,1,1,1,PASS
+call_009_paraphrased_compliant.txt,1,1,1,1,1,1,PASS
+call_010_polite_payment_ask.txt,1,1,1,1,1,1,PASS
+call_011_alt_paraphrase.txt,1,1,1,1,1,1,PASS
+call_012_implied_seizure.txt,1,1,1,1,0,1,FAIL
+call_013_agent_denies_threat.txt,1,1,1,1,1,1,PASS
+call_014_no_name_firm_demand.txt,1,1,1,0,1,0,REVIEW

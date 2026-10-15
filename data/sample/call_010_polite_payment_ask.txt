@@ -1,0 +1,5 @@
+Agent: This call may be recorded. My name is Lee, and this is an attempt to collect a debt. You have the right to dispute this debt within 30 days.
+Customer: Okay.
+Agent: If it's convenient, would you be able to pay right now by card? If not, we can schedule it for later this week.
+Customer: Later this week is better.
+Agent: No problem, I'll set that up.

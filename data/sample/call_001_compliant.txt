@@ -1,0 +1,9 @@
+Agent: Hello, this call may be recorded for quality assurance purposes. This is an attempt to collect a debt, and any information obtained will be used for that purpose. Am I speaking with Mr. Alvarez?
+Customer: Yes, this is he.
+Agent: My name is Jordan, and I'm calling on behalf of Meridian Recovery Group regarding your account ending in 4821. This communication is from a debt collector. Do you have a few minutes to discuss your account?
+Customer: Sure, go ahead.
+Agent: Thank you. Our records show a balance of $342.50 that is currently past due. I'd like to help you find a payment option that works for you. Would you be able to make a payment today, or would you prefer to set up a payment plan?
+Customer: I can probably do a payment plan.
+Agent: That works. I can set that up for you right now. As a reminder, you have the right to dispute this debt in writing within 30 days of this notice. Would you like me to continue with the payment plan setup?
+Customer: Yes, please.
+Agent: Great, let's get started.

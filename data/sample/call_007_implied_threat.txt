@@ -1,0 +1,5 @@
+Agent: This call may be recorded. My name is Dana, and this is an attempt to collect a debt. You have the right to dispute this debt within 30 days.
+Customer: I'm not sure I can afford this.
+Agent: Pay up, or I'll make sure your employer and your neighbors hear all about this.
+Customer: That's not okay.
+Agent: Your choice.

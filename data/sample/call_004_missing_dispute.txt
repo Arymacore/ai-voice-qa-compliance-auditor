@@ -1,0 +1,5 @@
+Agent: This call may be recorded. My name is Dev, and this is an attempt to collect a debt. Am I speaking with Mr. Okafor?
+Customer: Yes.
+Agent: Your account with Harbor Finance is $410.25 past due. Would you like to set up a payment plan?
+Customer: I guess so.
+Agent: Great, I can set that up for you now.

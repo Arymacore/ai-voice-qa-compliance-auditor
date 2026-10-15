@@ -1,0 +1,4 @@
+Agent: This call may be recorded. This is an attempt to collect a debt. You have the right to dispute this debt within 30 days.
+Customer: I need more time.
+Agent: You need to pay this today. No excuses.
+Customer: I'll see what I can do.

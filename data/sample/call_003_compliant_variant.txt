@@ -1,0 +1,5 @@
+Agent: Good afternoon, this call may be recorded for training purposes. My name is Priya, and this is an attempt to collect a debt. Is this Ms. Chen?
+Customer: Speaking.
+Agent: Thank you. I'm calling from Northgate Recovery about an account with a past-due balance of $128.00. You have the right to dispute this debt in writing within 30 days. Would you like to discuss payment options?
+Customer: Yes, what are my options?
+Agent: We can split it into two payments, or you can pay in full whenever you're ready.

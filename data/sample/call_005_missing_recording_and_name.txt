@@ -1,0 +1,5 @@
+Agent: Hello, is this Mrs. Lopez? This is an attempt to collect a debt.
+Customer: Yes, who is this?
+Agent: You have the right to dispute this debt within 30 days. The balance is $87.10 and it is past due. Can we arrange a payment?
+Customer: I can pay next week.
+Agent: That works, thank you.

@@ -1,0 +1,4 @@
+Agent: This call may be recorded. My name is Priya, and this is an attempt to collect a debt. You have the right to dispute this debt within 30 days.
+Customer: I can't pay anything right now.
+Agent: Keep ignoring us and a judge will hear about it, and your car won't be yours much longer.
+Customer: Please don't do that.

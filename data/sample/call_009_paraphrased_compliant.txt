@@ -1,0 +1,5 @@
+Agent: Hi, I'm Priya. Just so you know, we record these calls. I'm a debt collector, and I'm calling to collect on an old account.
+Customer: Okay.
+Agent: If you think the balance is wrong, you can dispute this debt within 30 days and we'll send proof.
+Customer: Good to know.
+Agent: Would you like to talk about a payment plan?

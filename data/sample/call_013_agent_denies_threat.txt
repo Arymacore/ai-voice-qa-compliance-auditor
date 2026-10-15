@@ -1,0 +1,4 @@
+Agent: This call may be recorded. My name is Sam, and this is an attempt to collect a debt. You have the right to dispute this debt within 30 days.
+Customer: Are you going to sue me? Or have me arrested?
+Agent: Nobody is suing anyone, and nothing like that is on the table. I just want to talk about a payment plan that works for you.
+Customer: Okay, that's a relief.

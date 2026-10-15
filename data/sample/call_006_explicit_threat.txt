@@ -1,0 +1,5 @@
+Agent: This call may be recorded. My name is Rick, and this is an attempt to collect a debt. You have the right to dispute this debt within 30 days.
+Customer: I can't pay that right now.
+Agent: If you don't pay by Friday, we will sue you and take it out of your paycheck.
+Customer: Please don't do that.
+Agent: Then make the payment.

@@ -1,0 +1,7 @@
+Agent: Hi, is this Mr. Alvarez?
+Customer: Yes.
+Agent: You owe us $342.50 and it's overdue. You need to pay this today or we're going to escalate this.
+Customer: I didn't even know I had a balance.
+Agent: Doesn't matter, you need to pay right now or there will be consequences.
+Customer: That seems aggressive, can I set up a payment plan?
+Agent: We'll see. Just pay something today.

@@ -1,0 +1,4 @@
+Agent: Hi, this is Marcus with Northgate Recovery. Just so you know, we keep a recording of these conversations.
+Customer: Okay, who is this?
+Agent: I'm calling as a debt collector about an outstanding balance. You're entitled to challenge the debt in writing within 30 days.
+Customer: Alright, I'll look into it.

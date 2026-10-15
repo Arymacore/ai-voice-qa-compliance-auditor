@@ -1,0 +1,5 @@
+Agent: This call may be recorded. My name is Sam, and this is an attempt to collect a debt. You have the right to dispute this debt within 30 days.
+Customer: You people are crooks! Pay right now? I'll tell you what, you will be arrested for harassing me!
+Agent: I understand you're upset. I'm happy to send written validation of the debt, and we can talk when you're ready.
+Customer: Fine. Send it.
+Agent: I'll send it today. Thank you for your time.
