@@ -1,0 +1,15 @@
+call_id,tone_label
+call_001_compliant,OK
+call_002_noncompliant,REVIEW
+call_003_compliant_variant,OK
+call_004_missing_dispute,OK
+call_005_missing_recording_and_name,OK
+call_006_explicit_threat,REVIEW
+call_007_implied_threat,REVIEW
+call_008_hostile_customer,OK
+call_009_paraphrased_compliant,OK
+call_010_polite_payment_ask,OK
+call_011_alt_paraphrase,OK
+call_012_implied_seizure,REVIEW
+call_013_agent_denies_threat,OK
+call_014_no_name_firm_demand,REVIEW

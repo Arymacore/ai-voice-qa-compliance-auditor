@@ -6,4 +6,5 @@ __pycache__/
 venv/
 .DS_Store
 results.json
-*.db
+*.dbresults.json
+results.json

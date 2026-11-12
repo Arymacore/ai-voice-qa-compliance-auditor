@@ -70,6 +70,16 @@ class LoginBody(BaseModel):
 
 DASHBOARD_DIR = Path(__file__).resolve().parents[1] / "dashboard"
 
+FAVICON_SVG = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">'
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
+    '<stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#6d28d9"/>'
+    '</linearGradient></defs>'
+    '<rect width="64" height="64" rx="16" fill="url(#g)"/>'
+    '<path d="M32 12 L37 27 L52 32 L37 37 L32 52 L27 37 L12 32 L27 27 Z" fill="#fff"/>'
+    '</svg>'
+)
+
 # Sent on every response. The dashboard loads only its own script and stylesheet,
 # so scripts, styles, and connections are restricted to this origin; the page
 # cannot be framed, and API responses (which contain transcripts) are never cached.
@@ -204,6 +214,11 @@ def create_app(
     @app.get("/dashboard.js", include_in_schema=False, dependencies=[Depends(require_page_login)])
     def dashboard_js():
         return page("dashboard.js", "text/javascript")
+
+    @app.get("/favicon.svg", include_in_schema=False)
+    @app.get("/favicon.ico", include_in_schema=False)
+    def favicon():
+        return Response(content=FAVICON_SVG, media_type="image/svg+xml")
 
     @app.get("/login", include_in_schema=False)
     def login_page():

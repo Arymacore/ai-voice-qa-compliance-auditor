@@ -97,3 +97,12 @@ def test_dashboard_has_account_menu(tmp_path):
     assert 'id="user-menu-button"' in page
     assert 'href="/logout"' in page
     store.close()
+
+
+def test_favicon_is_public(tmp_path):
+    client, store = make_client(tmp_path)
+    resp = client.get("/favicon.svg")
+    assert resp.status_code == 200
+    assert resp.headers["content-type"].startswith("image/svg+xml")
+    assert client.get("/favicon.ico").status_code == 200
+    store.close()
