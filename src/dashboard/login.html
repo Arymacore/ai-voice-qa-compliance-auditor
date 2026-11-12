@@ -1,0 +1,43 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in | Midnight Violet AI Voice QA Auditor</title>
+  <link rel="stylesheet" href="/login.css">
+  <script src="/login.js" defer></script>
+</head>
+<body>
+  <main class="login-wrap">
+    <div class="brand">
+      <div class="brand-icon">&#10022;</div>
+      <div class="brand-text">
+        <h2>VIOLET<span>AI</span></h2>
+        <p>COMPLIANCE INTELLIGENCE</p>
+      </div>
+    </div>
+
+    <section class="login-card" aria-labelledby="login-title">
+      <div class="eyebrow">&#10022; SECURE ACCESS</div>
+      <h1 id="login-title">Welcome <span>back.</span></h1>
+      <p class="sub">Sign in to view call analyses and compliance results.</p>
+
+      <form id="login-form">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+        <button type="submit" class="btn-primary">Sign in</button>
+        <p id="error" class="error" role="alert"></p>
+      </form>
+    </section>
+
+    <footer class="login-footer">
+      <span class="status-dot"></span>
+      <span>AI VOICE QA &amp; COMPLIANCE AUDITOR</span>
+    </footer>
+  </main>
+</body>
+</html>

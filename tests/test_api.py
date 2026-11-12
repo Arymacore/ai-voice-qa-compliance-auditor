@@ -71,10 +71,10 @@ def test_every_other_endpoint_requires_login(client, method, url):
     assert getattr(client, method)(url).status_code == 401
 
 
-def test_wrong_password_is_rejected_with_a_basic_challenge(client):
+def test_wrong_password_is_rejected_without_a_popup(client):
     bad = {"Authorization": "Basic " + base64.b64encode(b"reviewer:wrong").decode()}
     r = client.get("/api/summary", headers=bad)
-    assert r.status_code == 401 and r.headers["www-authenticate"] == "Basic"
+    assert r.status_code == 401 and "www-authenticate" not in r.headers
 
 
 def test_correct_login_is_accepted(client):

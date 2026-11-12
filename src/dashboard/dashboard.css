@@ -1294,3 +1294,87 @@ tbody tr.selected {
         flex-direction: column-reverse;
     }
 }
+
+/* Sign out button in the top bar */
+.logout-link {
+    min-height: 36px;
+    padding: 7px 14px;
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   ACCOUNT MENU
+===================================================== */
+
+.user-menu {
+    position: relative;
+}
+
+.user-menu-button {
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.user-menu-button:hover,
+.user-menu-button[aria-expanded="true"] {
+    border-color: rgba(167, 139, 250, 0.45);
+    background: rgba(139, 92, 246, 0.2);
+}
+
+.user-menu-panel[hidden] {
+    display: none;
+}
+
+.user-menu-panel {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    z-index: 30;
+
+    width: 250px;
+    overflow: hidden;
+
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+}
+
+.user-menu-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 16px;
+}
+
+.user-menu-info strong {
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.user-menu-info p {
+    margin: 3px 0 0;
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.user-menu-logout {
+    display: block;
+
+    padding: 13px 16px;
+
+    border-top: 1px solid var(--border);
+    color: var(--red);
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: background 0.2s;
+}
+
+.user-menu-logout:hover {
+    background: rgba(251, 113, 133, 0.1);
+}

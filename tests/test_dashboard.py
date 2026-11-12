@@ -31,7 +31,8 @@ def client(tmp_path):
 
 @pytest.mark.parametrize("path", ["/", "/dashboard.css", "/dashboard.js"])
 def test_dashboard_files_require_login(client, path):
-    assert client.get(path).status_code == 401
+    resp = client.get(path, follow_redirects=False)
+    assert resp.status_code == 303 and resp.headers["location"] == "/login"
 
 
 def test_page_is_served_to_a_logged_in_user(client):

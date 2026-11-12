@@ -25,6 +25,8 @@ Note: HTTP Basic sends the password with every request, so it must only be used
 over HTTPS once deployed (the cloud load balancer provides this).
 """
 
+import hashlib
+import hmac
 import logging
 import os
 import re
@@ -36,9 +38,10 @@ from pathlib import Path
 from collections import deque
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Response, UploadFile
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request, Response, UploadFile
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from pydantic import BaseModel
 
 from src.ingestion.file_validator import (
     MAX_FILE_SIZE_BYTES,
@@ -55,6 +58,15 @@ _UNSAFE_NAME_CHARS = re.compile(r"[^A-Za-z0-9._-]+")
 
 # Uploads call a paid API, so cap how many can be analyzed per hour.
 UPLOADS_PER_HOUR = int(os.environ.get("UPLOADS_PER_HOUR", "20"))
+
+# Browser sign-in: a signed cookie that lasts this many hours.
+SESSION_SECONDS = int(os.environ.get("SESSION_HOURS", "8")) * 3600
+SESSION_COOKIE = "qa_session"
+
+
+class LoginBody(BaseModel):
+    username: str
+    password: str
 
 DASHBOARD_DIR = Path(__file__).resolve().parents[1] / "dashboard"
 
@@ -117,17 +129,47 @@ def create_app(
         redoc_url=None,
         openapi_url="/openapi.json" if enable_docs else None,
     )
-    basic = HTTPBasic()
+    # auto_error=False: a missing Basic header must not trigger the browser popup.
+    basic = HTTPBasic(auto_error=False)
+    session_key = hashlib.sha256(b"qa-session|" + password.encode()).digest()
 
-    def require_login(credentials: Annotated[HTTPBasicCredentials, Depends(basic)]) -> None:
-        user_ok = secrets.compare_digest(credentials.username.encode(), user.encode())
-        pass_ok = secrets.compare_digest(credentials.password.encode(), password.encode())
-        if not (user_ok and pass_ok):
-            raise HTTPException(
-                status_code=401,
-                detail="Incorrect username or password.",
-                headers={"WWW-Authenticate": "Basic"},
-            )
+    def check_credentials(given_user: str, given_password: str) -> bool:
+        user_ok = secrets.compare_digest(given_user.encode(), user.encode())
+        pass_ok = secrets.compare_digest(given_password.encode(), password.encode())
+        return user_ok and pass_ok
+
+    def make_session() -> str:
+        expires = str(int(time.time()) + SESSION_SECONDS)
+        sig = hmac.new(session_key, expires.encode(), hashlib.sha256).hexdigest()
+        return f"{expires}.{sig}"
+
+    def session_valid(token: str | None) -> bool:
+        if not token or "." not in token:
+            return False
+        expires, _, sig = token.partition(".")
+        good = hmac.new(session_key, expires.encode(), hashlib.sha256).hexdigest()
+        return hmac.compare_digest(sig, good) and expires.isdigit() and int(expires) > time.time()
+
+    def is_authed(request: Request, credentials: HTTPBasicCredentials | None) -> bool:
+        if session_valid(request.cookies.get(SESSION_COOKIE)):
+            return True
+        return credentials is not None and check_credentials(
+            credentials.username, credentials.password
+        )
+
+    def require_login(
+        request: Request,
+        credentials: Annotated[HTTPBasicCredentials | None, Depends(basic)],
+    ) -> None:
+        if not is_authed(request, credentials):
+            raise HTTPException(status_code=401, detail="Not signed in.")
+
+    def require_page_login(
+        request: Request,
+        credentials: Annotated[HTTPBasicCredentials | None, Depends(basic)],
+    ) -> None:
+        if not is_authed(request, credentials):
+            raise HTTPException(status_code=303, headers={"Location": "/login"})
 
     api = APIRouter(prefix="/api", dependencies=[Depends(require_login)])
 
@@ -151,21 +193,58 @@ def create_app(
     def page(filename: str, media_type: str):
         return FileResponse(DASHBOARD_DIR / filename, media_type=media_type)
 
-    @app.get("/", include_in_schema=False, dependencies=[Depends(require_login)])
+    @app.get("/", include_in_schema=False, dependencies=[Depends(require_page_login)])
     def dashboard_page():
         return page("index.html", "text/html")
 
-    @app.get("/dashboard.css", include_in_schema=False, dependencies=[Depends(require_login)])
+    @app.get("/dashboard.css", include_in_schema=False, dependencies=[Depends(require_page_login)])
     def dashboard_css():
         return page("dashboard.css", "text/css")
 
-    @app.get("/dashboard.js", include_in_schema=False, dependencies=[Depends(require_login)])
+    @app.get("/dashboard.js", include_in_schema=False, dependencies=[Depends(require_page_login)])
     def dashboard_js():
         return page("dashboard.js", "text/javascript")
+
+    @app.get("/login", include_in_schema=False)
+    def login_page():
+        return page("login.html", "text/html")
+
+    @app.get("/login.css", include_in_schema=False)
+    def login_css():
+        return page("login.css", "text/css")
+
+    @app.get("/login.js", include_in_schema=False)
+    def login_js():
+        return page("login.js", "text/javascript")
+
+    @app.post("/login", include_in_schema=False)
+    def login(body: LoginBody, request: Request, response: Response):
+        if not check_credentials(body.username, body.password):
+            raise HTTPException(status_code=401, detail="Incorrect username or password.")
+        secure = request.headers.get("x-forwarded-proto", request.url.scheme) == "https"
+        response.set_cookie(
+            SESSION_COOKIE,
+            make_session(),
+            max_age=SESSION_SECONDS,
+            httponly=True,
+            samesite="strict",
+            secure=secure,
+        )
+        return {"status": "ok"}
+
+    @app.get("/logout", include_in_schema=False)
+    def logout():
+        redirect = RedirectResponse("/login", status_code=303)
+        redirect.delete_cookie(SESSION_COOKIE)
+        return redirect
 
     @app.get("/api/health")
     def health():
         return {"status": "ok"}
+
+    @api.get("/me")
+    def me():
+        return {"username": user}
 
     @api.get("/summary")
     def summary():

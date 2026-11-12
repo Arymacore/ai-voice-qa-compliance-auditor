@@ -145,9 +145,10 @@ Uploaded transcripts are never interpreted as markup.
         const response = await fetch(path, options);
 
         if (response.status === 401) {
+            window.location.href = "/login";
 
             throw new Error(
-                "You are not signed in. Reload the page to authenticate."
+                "Your session expired. Redirecting to sign in."
             );
         }
 
@@ -1596,7 +1597,48 @@ async function removeCall(callId) {
     // INITIALIZATION
     // =====================================================
 
+    function initUserMenu() {
+        const button = document.getElementById("user-menu-button");
+        const panel = document.getElementById("user-menu-panel");
+        if (!button || !panel) return;
+
+        function setOpen(open) {
+            panel.hidden = !open;
+            button.setAttribute("aria-expanded", String(open));
+        }
+
+        button.addEventListener("click", event => {
+            event.stopPropagation();
+            setOpen(panel.hidden);
+        });
+
+        document.addEventListener("click", event => {
+            if (!panel.hidden && !panel.contains(event.target)) {
+                setOpen(false);
+            }
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && !panel.hidden) {
+                setOpen(false);
+                button.focus();
+            }
+        });
+
+        api("/api/me").then(me => {
+            const initials = String(me.username).slice(0, 2).toUpperCase();
+            document.getElementById("user-menu-name").textContent = me.username;
+            document.getElementById("user-menu-avatar").textContent = initials;
+            button.textContent = initials;
+        }).catch(() => {
+            // Keep the default "QA" label if the lookup fails.
+        });
+    }
+
+
     function init() {
+        initUserMenu();
+
 
         const statusFilter = document.getElementById(
             "filter-status"

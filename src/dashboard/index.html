@@ -91,7 +91,25 @@
                     AI ENGINE ACTIVE
                 </span>
 
-                <div class="top-avatar">QA</div>
+                <div class="user-menu">
+                    <button type="button" id="user-menu-button"
+                            class="top-avatar user-menu-button"
+                            aria-haspopup="true" aria-expanded="false"
+                            aria-controls="user-menu-panel"
+                            aria-label="Account menu">QA</button>
+
+                    <div id="user-menu-panel" class="user-menu-panel" hidden>
+                        <div class="user-menu-info">
+                            <div class="avatar" id="user-menu-avatar">QA</div>
+                            <div>
+                                <strong id="user-menu-name">Signed in</strong>
+                                <p>QA Reviewer</p>
+                            </div>
+                        </div>
+
+                        <a href="/logout" class="user-menu-logout">Sign out</a>
+                    </div>
+                </div>
 
             </div>
 
