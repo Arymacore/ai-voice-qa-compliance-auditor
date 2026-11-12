@@ -36,9 +36,15 @@ SYSTEM_PROMPT = (
     "- Required rule: satisfied=true only if the agent clearly said it, in ANY wording "
     "(paraphrases count). Quote the exact words. If it was not said, satisfied=false "
     "and evidence=null.\n"
+    "- R2 (Debt collector identification): the agent must explicitly identify "
+    "themselves as a debt collector or explicitly identify the communication as "
+    "an attempt to collect a debt. Examples include 'I'm a debt collector' and "
+    "'This is an attempt to collect a debt'. A company name, collections department "
+    "title, overdue balance, or payment request alone does NOT satisfy R2.\n"
     "- Prohibited rule: satisfied=false if the agent did it, including implied or "
     "indirect versions (for example, threatening to tell an employer or neighbors). "
-    "Quote the exact words. If the agent did not do it, satisfied=true and evidence=null.\n"
+    "Quote the exact words. If the agent did not do it, satisfied=true and "
+    "evidence=null.\n"
     "- A polite question or offer (for example, asking whether the customer could pay "
     "today) is NOT pressure and NOT a threat.\n"
     "- Quotes must be copied exactly from the call text, with no ellipses and no changes.\n\n"
@@ -127,8 +133,29 @@ def parse_response(content: str, agent_text: str, rules: list[Rule]) -> dict[str
 
         # Only a "said it" (required) or "did it" (prohibited) claim needs proof.
         needs_proof = satisfied if rule.rule_type == "required" else not satisfied
-        grounded = (not needs_proof) or (
+
+        # First verify that the quoted evidence actually appears in the transcript.
+        quote_grounded = (
             evidence is not None and _quote_in_text(evidence, agent_text)
+        )
+
+        # R2 requires explicit debt-collector identification.
+        # A company name or department title alone is not sufficient evidence.
+        r2_evidence_valid = (
+            rule.rule_id != "R2"
+            or not satisfied
+            or (
+                evidence is not None
+                and any(
+                    re.search(pattern, evidence, re.IGNORECASE)
+                    for pattern in rule.patterns
+                )
+            )
+        )
+
+        grounded = (
+            not needs_proof
+            or (quote_grounded and r2_evidence_valid)
         )
         verdicts[rule.rule_id] = LLMVerdict(rule.rule_id, satisfied, evidence, grounded)
     return verdicts

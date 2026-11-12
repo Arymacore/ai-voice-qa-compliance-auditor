@@ -97,6 +97,65 @@ def test_customers_words_cannot_serve_as_evidence():
     r = analyze_tone(HOSTILE, client=fake_client(reply(composure=(1, "You people are crooks")))[0])
     assert by_dim(r)["composure"].score is None  # that line is the customer's
 
+def test_unlabeled_transcript_returns_unavailable():
+    transcript = (
+        "Hello, how are you? "
+        "Honestly, I didn't realize that I owed that much. "
+        "I understand you're upset."
+    )
+
+    client, completions = fake_client(reply())
+
+    report = analyze_tone(transcript, client=client)
+
+    assert report.available is False
+    assert report.flag == "UNAVAILABLE"
+    assert report.score is None
+    assert "speaker labels are missing" in report.error.lower()
+
+    # The LLM must not be called when agent speech cannot be identified.
+    assert completions.last_kwargs is None
+
+
+def test_customer_only_labeled_transcript_returns_unavailable():
+    transcript = (
+        "Customer: I am upset about this account.\n"
+        "Customer: I want someone to explain the charges."
+    )
+
+    client, completions = fake_client(reply())
+
+    report = analyze_tone(transcript, client=client)
+
+    assert report.available is False
+    assert report.flag == "UNAVAILABLE"
+    assert report.score is None
+    assert completions.last_kwargs is None
+
+
+def test_agent_labeled_transcript_still_gets_tone_analysis():
+    transcript = (
+        "Agent: I understand you're upset. "
+        "I will do my best to help you."
+        "\\nCustomer: Thank you."
+    )
+
+    quote = "I understand you're upset"
+    client, completions = fake_client(
+        reply(
+            professionalism=(4, quote),
+            empathy=(5, quote),
+            composure=(4, quote),
+        )
+    )
+
+    report = analyze_tone(transcript, client=client)
+
+    assert report.available is True
+    assert report.flag == "OK"
+    assert report.score is not None
+    assert completions.last_kwargs is not None
+
 
 @pytest.mark.parametrize("bad", [0, 6, "4", 3.5, True, None])
 def test_invalid_scores_are_unrated(bad):

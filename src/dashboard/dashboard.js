@@ -1636,7 +1636,144 @@ async function removeCall(callId) {
     }
 
 
+    function initNavigation() {
+    const links = document.querySelectorAll(".sidebar-nav .nav-item");
+
+    function updateActiveLink(hash) {
+        const target = hash || "#overview";
+
+        links.forEach(link => {
+            const isActive = link.getAttribute("href") === target;
+
+            link.classList.toggle("active", isActive);
+            if (isActive) {
+                link.setAttribute("aria-current", "page");
+            } else {
+                link.removeAttribute("aria-current");
+            }
+        });
+    }
+
+    links.forEach(link => {
+        link.addEventListener("click", () => {
+            updateActiveLink(link.getAttribute("href"));
+        });
+    });
+
+    window.addEventListener("hashchange", () => {
+        updateActiveLink(window.location.hash);
+    });
+
+    updateActiveLink(window.location.hash);
+}
+
+    function initAnalyzeModal() {
+    const modal = document.getElementById("analyze-modal");
+    const openButton = document.getElementById("analyze-call-open");
+    const cancelButton = document.getElementById("analyze-modal-cancel");
+    const audioButton = document.getElementById("choose-audio");
+    const transcriptButton = document.getElementById("choose-transcript");
+    const audioInput = document.getElementById("audio-upload-input");
+    const transcriptInput = document.getElementById("transcript-upload-input");
+    const selectedBox = document.getElementById("selected-upload");
+    const selectedName = document.getElementById("selected-upload-name");
+    const status = document.getElementById("upload-modal-status");
+    const submitButton = document.getElementById("analyze-modal-submit");
+
+    let selectedFile = null;
+    let processing = false;
+
+    function resetModal() {
+        selectedFile = null;
+        audioInput.value = "";
+        transcriptInput.value = "";
+        selectedBox.hidden = true;
+        selectedName.textContent = "";
+        status.textContent = "Select an audio recording or transcript to continue.";
+        submitButton.disabled = true;
+        submitButton.textContent = "Analyze Conversation";
+        audioButton.disabled = false;
+        transcriptButton.disabled = false;
+        cancelButton.disabled = false;
+        processing = false;
+    }
+
+    function selectFile(file) {
+        if (!file) return;
+
+        selectedFile = file;
+        selectedName.textContent = file.name;
+        selectedBox.hidden = false;
+        status.textContent = "Ready to analyze. Check the selected file before continuing.";
+        submitButton.disabled = false;
+    }
+
+    openButton.addEventListener("click", () => {
+        resetModal();
+        modal.hidden = false;
+        audioButton.focus();
+    });
+
+    cancelButton.addEventListener("click", () => {
+        if (processing) return;
+        modal.hidden = true;
+        resetModal();
+        openButton.focus();
+    });
+
+    modal.addEventListener("click", event => {
+        if (event.target === modal && !processing) {
+            modal.hidden = true;
+            resetModal();
+            openButton.focus();
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && !modal.hidden && !processing) {
+            modal.hidden = true;
+            resetModal();
+            openButton.focus();
+        }
+    });
+
+    audioButton.addEventListener("click", () => audioInput.click());
+    transcriptButton.addEventListener("click", () => transcriptInput.click());
+
+    audioInput.addEventListener("change", () => {
+        selectFile(audioInput.files[0]);
+    });
+
+    transcriptInput.addEventListener("change", () => {
+        selectFile(transcriptInput.files[0]);
+    });
+
+    submitButton.addEventListener("click", async () => {
+        if (!selectedFile || processing) return;
+
+        processing = true;
+        submitButton.disabled = true;
+        submitButton.textContent = "Analyzing...";
+        audioButton.disabled = true;
+        transcriptButton.disabled = true;
+        cancelButton.disabled = true;
+
+        status.textContent = selectedFile.name.endsWith(".txt")
+            ? "Evaluating transcript and generating compliance results..."
+            : "Transcribing audio and running AI quality analysis. This may take a few moments...";
+
+        try {
+            await uploadCall(selectedFile);
+        } finally {
+            modal.hidden = true;
+            resetModal();
+            openButton.focus();
+        }
+    });
+}
+
     function init() {
+        initNavigation();
         initUserMenu();
 
 
@@ -1650,10 +1787,6 @@ async function removeCall(callId) {
 
         const refreshButton = document.getElementById(
             "refresh"
-        );
-
-        const uploadInput = document.getElementById(
-            "upload"
         );
 
         statusFilter.addEventListener("change", event => {
@@ -1675,19 +1808,7 @@ async function removeCall(callId) {
             refresh
         );
 
-        uploadInput.addEventListener("change", event => {
-
-            const file = event.target.files[0];
-
-            if (file) {
-
-                uploadCall(file).finally(() => {
-
-                    event.target.value = "";
-
-                });
-            }
-        });
+        initAnalyzeModal();
 
         refresh();
     }

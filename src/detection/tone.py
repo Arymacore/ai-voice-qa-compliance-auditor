@@ -141,10 +141,27 @@ def parse_tone_response(content: str, agent_text: str) -> list[ToneRating]:
 
 def analyze_tone(transcript: str, client=None, model: str | None = None) -> ToneReport:
     """Rate one transcript's tone. Never raises for API problems; reports them instead."""
+
+    # Tone analysis requires identifiable agent speech.
+    transcript = transcript.lstrip("\ufeff")
+
+    has_agent_labels = any(
+        line.strip().lower().startswith("agent:")
+        for line in transcript.splitlines()
+    )
+
+    if not has_agent_labels:
+        return ToneReport(
+            available=False,
+            error="Agent speaker labels are missing; agent-only tone analysis cannot be verified.",
+        )
+
     agent_text = extract_agent_text(transcript)
+
     try:
         client = client or _get_client()
         model = model or os.environ.get("OPENAI_MODEL", DEFAULT_MODEL)
+
         try:
             response = client.chat.completions.create(
                 model=model,
@@ -153,12 +170,17 @@ def analyze_tone(transcript: str, client=None, model: str | None = None) -> Tone
                 temperature=0,
             )
             content = response.choices[0].message.content
-        except Exception as exc:  # network, auth, rate limit, bad model name...
-            raise LLMClassificationError(f"OpenAI request failed: {exc}") from exc
-        return ToneReport(ratings=parse_tone_response(content or "", agent_text))
+        except Exception as exc:
+            raise LLMClassificationError(
+                f"OpenAI request failed: {exc}"
+            ) from exc
+
+        return ToneReport(
+            ratings=parse_tone_response(content or "", agent_text)
+        )
+
     except LLMClassificationError as exc:
         return ToneReport(available=False, error=str(exc))
-
 
 def analyze_tone_file(file_path: str | Path, client=None) -> ToneReport:
     from src.ingestion.pipeline import ingest_call

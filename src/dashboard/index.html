@@ -142,15 +142,13 @@
                         ↻ Refresh
                     </button>
 
-                    <label class="btn-primary upload-button">
+                    <button
+                        id="analyze-call-open"
+                        class="btn-primary"
+                        type="button"
+                    >
                         <span>＋ Analyze Call</span>
-
-                        <input
-                            type="file"
-                            id="upload"
-                            accept=".txt,.wav,.mp3,.m4a"
-                        >
-                    </label>
+                    </button>
 
                 </div>
 
@@ -399,6 +397,99 @@
                 type="button"
             >
                 Delete Call
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- ANALYZE CALL MODAL -->
+<div
+    id="analyze-modal"
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="analyze-modal-title"
+    hidden
+>
+    <div class="modal-card analyze-modal-card">
+
+        <div class="modal-icon analyze-modal-icon" aria-hidden="true">
+            ✦
+        </div>
+
+        <h2 id="analyze-modal-title">Analyze a Conversation</h2>
+
+        <p>
+            Choose how you want to submit the conversation for
+            AI-powered quality and compliance analysis.
+        </p>
+
+        <div class="upload-choice-grid">
+
+            <button
+                type="button"
+                class="upload-choice"
+                id="choose-audio"
+            >
+                <span class="upload-choice-icon">♫</span>
+                <strong>Audio Recording</strong>
+                <span>WAV · MP3 · M4A</span>
+            </button>
+
+            <button
+                type="button"
+                class="upload-choice"
+                id="choose-transcript"
+            >
+                <span class="upload-choice-icon">▤</span>
+                <strong>Text Transcript</strong>
+                <span>TXT</span>
+            </button>
+
+        </div>
+
+        <input
+            type="file"
+            id="audio-upload-input"
+            accept=".wav,.mp3,.m4a,audio/wav,audio/mpeg,audio/mp4"
+            hidden
+        >
+
+        <input
+            type="file"
+            id="transcript-upload-input"
+            accept=".txt,text/plain"
+            hidden
+        >
+
+        <div id="selected-upload" class="selected-upload" hidden>
+            <span>Selected file</span>
+            <strong id="selected-upload-name"></strong>
+        </div>
+
+        <p id="upload-modal-status" class="upload-modal-status" aria-live="polite">
+            Select an audio recording or transcript to continue.
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="modal-cancel"
+                id="analyze-modal-cancel"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="modal-confirm analyze-submit"
+                id="analyze-modal-submit"
+                disabled
+            >
+                Analyze Conversation
             </button>
 
         </div>

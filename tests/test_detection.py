@@ -71,3 +71,19 @@ def test_missing_only_minor_rule_is_review():
     assert _result(report, "R4").passed is False  # no agent name given
     assert report.status == "REVIEW"
     assert 0 < report.score < 100
+
+
+def test_utf8_bom_does_not_hide_first_agent_statement():
+    transcript = (
+        "\ufeffAgent: This call may be recorded for quality assurance. "
+        "My name is Jordan. This is an attempt to collect a debt. "
+        "You have the right to dispute this debt within 30 days."
+    )
+
+    agent_text = extract_agent_text(transcript)
+    report = analyze_transcript(transcript)
+
+    assert agent_text.startswith("This call may be recorded")
+    assert _result(report, "R1").passed
+    assert _result(report, "R1").evidence == "may be recorded"
+    assert report.status == "PASS"

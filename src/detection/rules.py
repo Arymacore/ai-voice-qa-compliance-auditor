@@ -43,12 +43,19 @@ REQUIRED_RULES = [
     Rule(
         rule_id="R2",
         name="Debt collector identification",
-        description="Agent must state this is an attempt to collect a debt / from a debt collector.",
+        description=(
+            "Agent must explicitly identify the communication as debt collection "
+            "or identify themselves as a debt collector. A company name, department "
+            "title, overdue-balance statement, or payment request alone is insufficient."
+        ),
         rule_type="required",
         severity="high",
         patterns=(
-            r"attempt to collect a debt",
+            r"attempt to collect (?:a|the) debt",
             r"from a debt collector",
+            r"(?:i am|i'm) (?:a )?debt collector",
+            r"communication is from a debt collector",
+            r"calling to collect (?:a|the) debt",
         ),
     ),
     Rule(

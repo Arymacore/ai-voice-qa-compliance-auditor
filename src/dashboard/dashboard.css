@@ -1378,3 +1378,120 @@ tbody tr.selected {
 .user-menu-logout:hover {
     background: rgba(251, 113, 133, 0.1);
 }
+
+/* =========================================
+   ANALYZE CONVERSATION MODAL
+========================================= */
+
+.analyze-modal-card {
+    max-width: 560px;
+    width: calc(100% - 32px);
+}
+
+.analyze-modal-icon {
+    background: rgba(139, 92, 246, 0.16);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    color: #c4b5fd;
+}
+
+.upload-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 26px;
+}
+
+.upload-choice {
+    min-height: 150px;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 14px;
+    border: 1px solid #40314f;
+    background: #100c1c;
+    color: #f5f3ff;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.upload-choice:hover,
+.upload-choice:focus-visible {
+    border-color: #a78bfa;
+    background: rgba(139, 92, 246, 0.12);
+    transform: translateY(-2px);
+    outline: none;
+}
+
+.upload-choice-icon {
+    font-size: 30px;
+    color: #c4b5fd;
+}
+
+.upload-choice strong {
+    font-size: 14px;
+}
+
+.upload-choice > span:last-child {
+    font-size: 11px;
+    color: #a69bbd;
+}
+
+.selected-upload {
+    margin-top: 18px;
+    padding: 13px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: #100c1c;
+    border: 1px solid #40314f;
+    border-radius: 10px;
+}
+
+.selected-upload[hidden] {
+    display: none;
+}
+
+.selected-upload span {
+    color: #a69bbd;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.selected-upload strong {
+    color: #e9ddff;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.upload-modal-status {
+    margin-top: 14px !important;
+    font-size: 12px !important;
+}
+
+.analyze-submit {
+    background: linear-gradient(135deg, #8b5cf6, #6d42cf);
+    border-color: #8b5cf6;
+}
+
+.analyze-submit:hover {
+    background: linear-gradient(135deg, #9b72fa, #8054e0);
+}
+
+.analyze-submit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .upload-choice-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .upload-choice {
+        min-height: 115px;
+    }
+}

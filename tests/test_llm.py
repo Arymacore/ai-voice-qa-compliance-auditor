@@ -77,10 +77,27 @@ def test_quote_not_in_transcript_is_ungrounded():
     assert verdicts["R1"].grounded is False
 
 
-def test_quote_with_ellipsis_is_grounded_if_each_part_matches():
-    reply = payload(R1=(True, "we record ... these calls"))
-    text = "Just so you know, we record all of these calls."
-    assert parse_response(reply, text, ALL_RULES)["R1"].grounded is True
+def test_r2_rejects_company_department_name_as_evidence():
+    quote = (
+        "I'm calling from Delaware Capital Group "
+        "Financial Collections Department."
+    )
+    reply = payload(R2=(True, quote))
+
+    verdict = parse_response(reply, quote, ALL_RULES)["R2"]
+
+    # The quote exists in the transcript, but does not explicitly
+    # identify the communication as debt collection.
+    assert verdict.grounded is False
+
+
+def test_r2_accepts_explicit_debt_collector_paraphrase():
+    quote = "I'm a debt collector."
+    reply = payload(R2=(True, quote))
+
+    verdict = parse_response(reply, quote, ALL_RULES)["R2"]
+
+    assert verdict.grounded is True
 
 
 def test_entry_with_wrong_type_is_skipped():

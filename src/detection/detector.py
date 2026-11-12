@@ -76,6 +76,7 @@ class ComplianceReport:
         return "REVIEW"
 
 
+
 def extract_agent_text(transcript: str) -> str:
     """
     Return only what the agent said (lines starting 'Agent:').
@@ -84,12 +85,17 @@ def extract_agent_text(transcript: str) -> str:
     has no speaker labels (e.g., raw Whisper output), fall back to the whole
     text, since we can't tell who said what.
     """
+    # Remove a UTF-8 BOM if one is present at the beginning of the transcript.
+    transcript = transcript.lstrip("\ufeff")
+
     agent_lines = [
         line.split(":", 1)[1].strip()
         for line in transcript.splitlines()
         if line.strip().lower().startswith("agent:")
     ]
+
     return " ".join(agent_lines) if agent_lines else transcript
+
 
 
 def _first_match(rule: Rule, text: str) -> str | None:

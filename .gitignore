@@ -8,3 +8,12 @@ venv/
 results.json
 *.dbresults.json
 results.json
+
+# Local audio files — never commit
+test_audio/
+*.wav
+*.mp3
+*.m4a
+
+# Local database
+data/*.db
