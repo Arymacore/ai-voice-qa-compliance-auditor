@@ -4,7 +4,7 @@ test_evaluation.py
 Guards the detector's accuracy so a change to the rules (or a future LLM
 layer) can't quietly make it worse.
 
-BASELINE_* are the Sprint 2 rule-based results on our 10 labeled calls.
+BASELINE_* are the Sprint 2 rule-based results on our 14 labeled calls.
 When detection genuinely improves, raise these numbers.
 """
 

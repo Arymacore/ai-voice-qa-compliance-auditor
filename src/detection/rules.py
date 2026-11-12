@@ -79,7 +79,10 @@ PROHIBITED_RULES = [
     Rule(
         rule_id="P1",
         name="Threats of consequences",
-        description="Agent must not threaten escalation, arrest, or legal/seizure action.",
+        description=(
+            "Agent must not threaten escalation, arrest, or legal/seizure action. "
+            "A firm demand to pay with no stated consequence is not a threat (that is P2)."
+        ),
         rule_type="prohibited",
         severity="high",
         patterns=(
@@ -92,7 +95,12 @@ PROHIBITED_RULES = [
     Rule(
         rule_id="P2",
         name="Pressure tactics",
-        description="Agent must not demand immediate payment under pressure.",
+        description=(
+            "Agent must not demand immediate payment under pressure, such as "
+            "'pay right now or else' or 'you need to pay today'. "
+            "Do not flag P2 for a payment request that follows a deadline or "
+            "threat (that belongs to P1), or for a calm request or offer to pay."
+        ),
         rule_type="prohibited",
         severity="medium",
         patterns=(
